@@ -1,0 +1,66 @@
+<!--
+ * @Author: zhangwu
+ * @Date: 2022-04-19 10:50:35
+ * @LastEditors: zhangwu
+ * @LastEditTime: 2022-04-19 23:57:51
+ * @Description: 请填写简介
+-->
+# 使用 Effect Hook
+
+Effect Hook 可以让我们在函数组件中执行副作用操作。
+
+可以把 useEffect Hook 看做 componentDidMount，componentDidUpdate 和 componentWillUnmount 这三个函数的组合。
+
+在 React 组件中有两种常见副作用操作：需要清除的和不需要清除的。
+
+## 无须清除的 effect
+
+一般来说我们希望在 React 更新 DOM 后执行一些操作，比如网络请求，手动变更DOM，记录日志等。
+
+* useEffect 做了什么
+  通过使用这个 Hook，我们可以告诉 React 组件需要在渲染后执行什么，React 会保存我们传递的函数，并在 DOM 更新后调用它。
+  
+* 为什么在组件内部调用 useEffect
+  方便我们在effect中直接访问 state 或者 props 中的变量。运用了 js闭包 的机制。
+
+* useEffect 会在每次渲染后都执行吗？
+   是的，（默认情况下是这样的，不过可以增加限制）
+   React 保证了每次 effect 运行时,DOM 都已经更新完毕。
+
+每次我们重新渲染，都会生成新的 effect，替换掉之前的。（相当于每次渲染时都会执行 useEffect 同事传递一个新的 effect）
+
+## 需要清除的 effect
+
+有一些副作用是需要清除的，比如计时器或者订阅外部数据源，清除工作是非常重要的，可以防止内存泄漏。
+
+清除工作一般在 useEffect 返回的函数里面进行操作。
+
+* 为什么要在 effect 中返回一个函数
+  这是 effect 可选的清除机制，这样可以将添加和清除的逻辑放在一起。使得代码更易读。
+
+* React 何时清除 effect
+  React 会在组件卸载的时候执行清除操作。
+
+## 使用 Effect 的提示
+
+ 在本节中将继续深入了解 `useEffect`的某些特性
+
+### 使用多个 Effect 实现关注点分离
+
+使用 hooks 的其中一个目的就是要解决 class 中生命周期经常包含多个不相关的逻辑，而相关的逻辑又分离到几个不同的方法中的问题。
+
+**Hooks允许我们按照代码的用途分离他们** React 按照 Effect 的声明顺序依次调用他们。
+
+### 为什么每次更新的时候都要运行Effect
+
+注意： **effect 的清除阶段在每次重新渲染时都会执行，而不是只在卸载组件的时候执行一次**
+
+### 通过跳过 effect 进行性能优化
+
+```javaScript
+useEffect(() => {
+  document.title = `You clicked ${count} times`;
+}, [count]); // 仅在 count 更改时更新
+```
+
+如果想执行只运行一次的 effect（仅在组件挂载和卸载时执行），可以传递一个空数组（[]）作为第二个参数。
