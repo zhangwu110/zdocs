@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>a</h1>
+    <iframe src="http://localhost:3001/c.html" id="b" frameborder="0" onload="load()"></iframe>
+    <script>
+        // a 与b 同源  
+        // c不是
+        //先用iframe 加载c  c设置window.name
+        //再用 iframe 加载b
+        //取 b.contentWindow.name 就是 c设置的值
+        let first = true;
+        function load() {
+            const iframe = document.getElementById("b")
+            console.log(iframe.contentWindow);
+            if (first) {
+                first = false;
+                iframe.src = "http://localhost:52330/%E8%B7%A8%E5%9F%9F%E6%96%B9%E6%B3%95/example/04.name/b.html"
+            }
+console.log(iframe.contentWindow.name);
+        }
+    </script>
+</body>
+
+</html>
